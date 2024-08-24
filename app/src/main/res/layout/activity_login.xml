@@ -4,68 +4,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#388881"
     tools:context=".login">
 
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="201dp"
-        android:layout_height="58dp"
-        android:fontFamily="serif-monospace"
-        android:gravity="center"
-        android:text="LOGIN"
-        android:textSize="45dp"
-        android:textStyle="bold"
+    <androidx.cardview.widget.CardView
+        android:layout_width="283dp"
+        android:layout_height="469dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.447"
+        app:layout_constraintHorizontal_bias="0.62"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.258" />
+        app:layout_constraintVertical_bias="0.452" >
 
-    <EditText
-        android:id="@+id/editTextText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Username"
-        android:inputType="text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.467"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.399" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:fontFamily="serif-monospace"
+            android:gravity="center"
+            android:text="LOGIN"
+            android:layout_marginTop="90dp"
+            android:textSize="45dp"
+            android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/editTextTextPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.467"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.516" />
+        <EditText
+            android:id="@+id/editTextText"
+            android:layout_width="251dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="175dp"
+            android:layout_marginLeft="20dp"
+            android:ems="10"
+            android:hint="Username"
+            android:inputType="text" />
 
-    <Button
-        android:id="@+id/b1"
-        android:layout_width="117dp"
-        android:layout_height="39dp"
-        android:backgroundTint="#88CBFE"
-        android:fontFamily="serif-monospace"
-        android:text="LOGIN"
-        android:textColor="@color/black"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.618" />
+        <EditText
+            android:id="@+id/editTextTextPassword"
+            android:layout_width="246dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="300dp"
+            android:layout_marginLeft="20dp"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/b1"
+            android:layout_width="117dp"
+            android:layout_height="39dp"
+            android:backgroundTint="#88CBFE"
+            android:fontFamily="serif-monospace"
+            android:text="LOGIN"
+            android:textColor="@color/black"
+            android:layout_marginTop="400dp"
+            android:layout_marginLeft="80dp"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/textView2"
@@ -97,6 +93,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.988" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
