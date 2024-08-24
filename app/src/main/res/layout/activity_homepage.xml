@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FEFEFE"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".homepage">
 
@@ -17,12 +17,14 @@
         <TextView
             android:id="@+id/imageView5"
             android:layout_width="match_parent"
-            android:layout_height="134dp"
+            android:layout_height="74dp"
             android:fontFamily="serif-monospace"
             android:gravity="center"
-            android:rotationX="21"
+            android:background="#54807C"
+            android:rotationX="0"
             android:rotationY="0"
             android:text="CRICKET HUB"
+            android:textColor="#FFFFFF"
             android:textSize="50dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -37,7 +39,7 @@
             android:id="@+id/imageView3"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.487"
@@ -54,7 +56,9 @@
             android:background="@drawable/image"
             android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center"
+            android:backgroundTint="#54807C"
             android:text="SLOT BOOKING"
+            android:textColor="@color/white"
             android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -81,6 +85,8 @@
             android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center"
             android:text="PLAYERS"
+            android:textColor="@color/white"
+            android:backgroundTint="#54807C"
             android:textSize="20dp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -99,11 +105,15 @@
             android:layout_marginRight="80dp"
             android:layout_marginBottom="30dp"
             android:background="@drawable/image"
+            android:backgroundTint="#54807C"
             android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center"
             android:text="LEARN MORE"
+            android:textColor="@color/white"
             android:textSize="20dp"
-            android:textStyle="bold"></TextView>
+            android:textStyle="bold"
+            tools:ignore="TextSizeCheck">
+        </TextView>
     </LinearLayout>
 
 
