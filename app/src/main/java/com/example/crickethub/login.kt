@@ -13,16 +13,25 @@ class login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         val tv1:TextView=findViewById(R.id.tv1);
+        val cond=""
+        val et1:TextView=findViewById(R.id.et1);
+        val pass:TextView=findViewById(R.id.pass);
         val b1:Button=findViewById(R.id.b1);
         tv1.setOnClickListener {
             val intent = Intent(this, registration::class.java)
             startActivity(intent)
         }
         b1.setOnClickListener {
-            val intent = Intent(this, homepage::class.java)
-            startActivity(intent)
+            if(et1.length()==0 && pass.length()==0)
+            {
+                et1.setError("fill this")
+                pass.setError("fill this")
+            }
+            else {
+                val intent = Intent(this, homepage::class.java)
+                startActivity(intent)
+            }
         }
-
 
     }
 }

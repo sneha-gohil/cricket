@@ -7,7 +7,7 @@
     tools:context=".registration">
 
     <EditText
-        android:id="@+id/editTextText2"
+        android:id="@+id/et2"
         android:layout_width="260dp"
         android:layout_height="53dp"
         android:ems="10"
@@ -37,7 +37,7 @@
         app:layout_constraintVertical_bias="0.106" />
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress"
+        android:id="@+id/et3"
         android:layout_width="255dp"
         android:layout_height="51dp"
         android:ems="10"
@@ -50,7 +50,7 @@
         app:layout_constraintVertical_bias="0.347" />
 
     <EditText
-        android:id="@+id/editTextNumber"
+        android:id="@+id/et4"
         android:layout_width="256dp"
         android:layout_height="51dp"
         android:ems="10"
@@ -64,7 +64,7 @@
         app:layout_constraintVertical_bias="0.45" />
 
     <EditText
-        android:id="@+id/editTextPhone"
+        android:id="@+id/et5"
         android:layout_width="256dp"
         android:layout_height="51dp"
         android:ems="10"
@@ -92,7 +92,7 @@
         app:layout_constraintVertical_bias="0.897" />
 
     <EditText
-        android:id="@+id/editTextTextPassword2"
+        android:id="@+id/pas1"
         android:layout_width="256dp"
         android:layout_height="49dp"
         android:ems="10"
@@ -106,7 +106,7 @@
         app:layout_constraintVertical_bias="0.65" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/c1"
         android:layout_width="266dp"
         android:layout_height="66dp"
         android:text="  By clicking on register you, \naccept our terms and conditions"
