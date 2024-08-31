@@ -31,7 +31,7 @@ class registration : AppCompatActivity() {
                 c1.setError("should be checked")
             }
             else {
-                val intent = Intent(this, login::class.java)
+                val intent = Intent(this,login::class.java)
                 startActivity(intent)
             }
         }
