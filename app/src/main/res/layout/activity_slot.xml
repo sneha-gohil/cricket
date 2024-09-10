@@ -9,15 +9,15 @@
 
 
     <TextView
-        android:layout_width="449dp"
-        android:layout_height="66dp"
+        android:layout_width="444dp"
+        android:layout_height="55dp"
         android:background="#2E5A56"
-        android:text="VENUES"
-        android:textSize="40dp"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:gravity="center"
         android:fontFamily="serif-monospace"
+        android:gravity="center"
+        android:text="VENUES"
+        android:textColor="@color/white"
+        android:textSize="40dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.666"
@@ -30,6 +30,7 @@
         android:layout_width="306dp"
         android:layout_height="222dp"
         app:cardCornerRadius="30dp"
+        android:layout_marginTop="30dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,8 +43,8 @@
 
             <ImageView
                 android:id="@+id/imageView6"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="309dp"
+                android:layout_height="240dp"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/v2" />
 
@@ -68,7 +69,7 @@
         android:layout_width="320dp"
         android:layout_height="199dp"
         app:cardCornerRadius="30dp"
-        android:layout_marginBottom="65dp"
+        android:layout_marginBottom="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
@@ -108,7 +109,7 @@
         android:layout_width="295dp"
         android:layout_height="200dp"
         app:cardCornerRadius="30dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
