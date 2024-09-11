@@ -17,13 +17,8 @@ class homepage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_homepage)
         val vp:ViewPager2=findViewById(R.id.vp);
-        val i1 =findViewById<ImageView>(R.id.i1);
-       // val i2:ImageView=findViewById(R.id.i2);
+
         val adapter = viewpg(this)
         vp.adapter = adapter
-        i1.setOnClickListener{
-            val intent = Intent(this, slot_booking::class.java)
-            startActivity(intent)
-        }
     }
 }

@@ -12,7 +12,8 @@ class history : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_history, container, false)
+        val view:  View=inflater.inflate(R.layout.fragment_history, container, false)
+        return view
     }
 
 
