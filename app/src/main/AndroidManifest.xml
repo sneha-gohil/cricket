@@ -13,6 +13,32 @@
         android:theme="@style/Theme.Crickethub"
         tools:targetApi="31">
         <activity
+            android:name=".player"
+            android:exported="false">
+
+        </activity>
+        <activity
+            android:name=".history1"
+            android:exported="false" />
+        <activity
+            android:name=".profile1"
+            android:exported="false" />
+        <activity
+            android:name=".home1"
+            android:exported="false" />
+        <activity
+            android:name=".payment"
+            android:exported="false" />
+        <activity
+            android:name=".formv3"
+            android:exported="false" />
+        <activity
+            android:name=".formv2"
+            android:exported="false" />
+        <activity
+            android:name=".formv1"
+            android:exported="false" />
+        <activity
             android:name=".slot"
             android:exported="false" />
         <activity
