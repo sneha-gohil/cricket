@@ -7,7 +7,7 @@
     tools:context=".registration">
 
     <EditText
-        android:id="@+id/et2"
+        android:id="@+id/username"
         android:layout_width="260dp"
         android:layout_height="53dp"
         android:ems="10"
@@ -37,7 +37,7 @@
         app:layout_constraintVertical_bias="0.106" />
 
     <EditText
-        android:id="@+id/et3"
+        android:id="@+id/email"
         android:layout_width="255dp"
         android:layout_height="51dp"
         android:ems="10"
@@ -50,7 +50,7 @@
         app:layout_constraintVertical_bias="0.347" />
 
     <EditText
-        android:id="@+id/et4"
+        android:id="@+id/age"
         android:layout_width="256dp"
         android:layout_height="51dp"
         android:ems="10"
@@ -64,7 +64,7 @@
         app:layout_constraintVertical_bias="0.45" />
 
     <EditText
-        android:id="@+id/et5"
+        android:id="@+id/no"
         android:layout_width="256dp"
         android:layout_height="51dp"
         android:ems="10"
@@ -92,7 +92,7 @@
         app:layout_constraintVertical_bias="0.897" />
 
     <EditText
-        android:id="@+id/pas1"
+        android:id="@+id/pass"
         android:layout_width="256dp"
         android:layout_height="49dp"
         android:ems="10"

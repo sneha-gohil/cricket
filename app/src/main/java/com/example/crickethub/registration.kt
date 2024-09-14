@@ -6,8 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.TextView
-import dbhelper
+import android.widget.Toast
 
 class registration : AppCompatActivity() {
     private lateinit var db : dbhelper
@@ -17,24 +18,22 @@ class registration : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration2)
         val reg: Button = findViewById(R.id.reg);
-        val et2: TextView = findViewById(R.id.et2);
-        val et3: TextView = findViewById(R.id.et3);
-        val et4: TextView = findViewById(R.id.et4);
-        val et5: TextView = findViewById(R.id.et5);
-        val pas1: TextView = findViewById(R.id.pas1);
-        val c1: CheckBox = findViewById(R.id.c1);
+        val user : EditText = findViewById(R.id.username)
+        val email : EditText = findViewById(R.id.email)
+        val age : EditText = findViewById(R.id.age)
+        val phone : EditText = findViewById(R.id.no)
+        val pass : EditText = findViewById(R.id.pass)
+        val c1: CheckBox = findViewById(R.id.c1)
             db = dbhelper(this)
         reg.setOnClickListener {
-            if (et2.length() == 0 && et3.length() == 0 && et4.length() == 0 && et5.length() == 0 && pas1.length() == 0 && c1.isChecked == true) {
-                et2.setError("fill this")
-                et3.setError("fill this")
-                et4.setError("fill this")
-                et5.setError("fill this")
-                pas1.setError("fill this")
-                c1.setError("should be checked")
-            } else {
-                val intent = Intent(this, login::class.java)
-                startActivity(intent)
+           val value = db.insertUser(user.text.toString().trim(),age.text.toString().trim(),email.text.toString().trim(),phone.text.toString().trim(),pass.text.toString().trim())
+            if (value>0){
+                Toast.makeText(this,"Registration successfull",Toast.LENGTH_SHORT).show()
+                val i = Intent(this,login::class.java)
+                startActivity(i)
+                finish()
+            }else{
+                Toast.makeText(this,"Registration failed",Toast.LENGTH_SHORT).show()
             }
         }
     }
