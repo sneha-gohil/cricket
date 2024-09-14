@@ -104,7 +104,7 @@
         app:layout_constraintVertical_bias="0.934" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/vname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -118,7 +118,7 @@
         app:layout_constraintVertical_bias="0.119" />
 
     <EditText
-        android:id="@+id/editTextDate"
+        android:id="@+id/date1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -131,7 +131,7 @@
         app:layout_constraintVertical_bias="0.239" />
 
     <EditText
-        android:id="@+id/editTextTime"
+        android:id="@+id/stime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -144,7 +144,7 @@
         app:layout_constraintVertical_bias="0.36" />
 
     <EditText
-        android:id="@+id/editTextTime2"
+        android:id="@+id/etime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -157,7 +157,7 @@
         app:layout_constraintVertical_bias="0.505" />
 
     <EditText
-        android:id="@+id/editTextNumber"
+        android:id="@+id/charge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -170,7 +170,7 @@
         app:layout_constraintVertical_bias="0.66" />
 
     <EditText
-        android:id="@+id/editTextNumber2"
+        android:id="@+id/nplayer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
