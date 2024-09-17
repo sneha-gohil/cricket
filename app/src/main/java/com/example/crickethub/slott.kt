@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity() {
+class slott : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_slot)
+        setContentView(R.layout.activity_slott)
 
 
         val image1: ImageView = findViewById(R.id.imageView1)

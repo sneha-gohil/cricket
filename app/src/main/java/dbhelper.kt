@@ -12,6 +12,9 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(TABLE_USER_CREATE)
+        db.execSQL(TABLE_BOOK_CREATE)
+        db.execSQL(TABLE_PAYMENT_CREATE)
+        db.execSQL(TABLE_PLAYER_CREATE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -107,6 +110,33 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
 
+    fun getUserDetails(userId: Int): User? {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT user_name, age, email, contact FROM User WHERE user_id = ?",
+            arrayOf(userId.toString())
+        )
+
+        return if (cursor.moveToFirst()) {
+            val userName = cursor.getString(cursor.getColumnIndexOrThrow("user_name"))
+            val age = cursor.getInt(cursor.getColumnIndexOrThrow("age"))
+            val email = cursor.getString(cursor.getColumnIndexOrThrow("email"))
+            val contact = cursor.getString(cursor.getColumnIndexOrThrow("contact"))
+            User(userName, age.toString(), email, contact)
+        } else {
+            null
+        }.also {
+            cursor.close()
+        }
+    }
+
+    // Define the User data class
+    data class User(
+        val name: String,
+        val age: String,
+        val email: String,
+        val contact: String
+    )
 
 
 
@@ -154,27 +184,31 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         private const val TABLE_PLAYER_CREATE="""
             CREATE TABLE player(
             player_name TEXT NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES User(user_id)
+            user_id INTEGER NOT NULL,
             age INTEGER NOT NULL,
             gender INTEGER NOT NULL,
             batsman INTEGER NOT NULL,
             bowler INTEGER NOT NULL,
-            contact INTEGER NOT NUL,
+            contact INTEGER NOT NULl,
+            FOREIGN KEY (user_id) REFERENCES User(user_id)
             );
         """
         //payment table
         private const val TABLE_PAYMENT_CREATE="""
             CREATE TABLE payment(
-            p_id INTEGER NOT NULL AUTOINCREMENT,
-            FOREIGN KEY (book_id) REFERENCES book(book_id)
-            date TEXT NOT NULL,
+            p_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            book_id INTEGER NOT NULL,
+            date DATE NOT NULL,
             pay_method TEXT NOT NULL,
+            FOREIGN KEY (book_id) REFERENCES book(book_id)
             );
         """
 
         //bill table
         private const val TABLE_BILL_CREATE="""
             CREATE TABLE bill(
+            user_id INTEGER NOT NULL,
+            book_id INTEGER NOT NULL,
             FOREIGN KEY (user_id) REFERENCES User(user_id),
             FOREIGN KEY (book_id) REFERENCES book(book_id),
             FOREIGN KEY (p_id) REFERENCES payment(p_id),

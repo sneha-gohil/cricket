@@ -18,7 +18,7 @@ class home1 : Fragment() {
         val b1:Button= view.findViewById(R.id.b1);
         val b2:Button= view.findViewById(R.id.b2);
         b1.setOnClickListener {
-            val i1= Intent (requireContext(), slot::class.java)
+            val i1= Intent (requireContext(), slott::class.java)
             startActivity(i1)
         }
         b2.setOnClickListener {
