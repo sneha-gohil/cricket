@@ -155,7 +155,7 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     companion object {
         private const val DATABASE_NAME = "mydatabase.db"
         private const val DATABASE_VERSION = 2
-        private const val TABLE_USER_CREATE = """
+        private const val TABLE_USER_CREATE =( """
             CREATE TABLE User (
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_name TEXT,
@@ -164,35 +164,32 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                 contact INTEGER UNIQUE,
                 password TEXT NOT NULL
             );
-        """
+        """)
 
 
         //venue table
-        private const val TABLE_VENUE_CREATE= """
+        private const val TABLE_VENUE_CREATE=( """
             CREATE TABLE venue(
-                v_id Integer PRIMARY KEY, 
                  v_name TEXT
             );
-        """
+        """)
 
         //book table
-        private const val TABLE_BOOK_CREATE= """
+        private const val TABLE_BOOK_CREATE= ("""
             CREATE TABLE book (
                 book_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                v_id INTEGER NOT NULL, 
                 v_name TEXT NOT NULL,
                 date TEXT NOT NULL,
                 start_time TEXT NOT NULL,
                 end_time TEXT NOT NULL,
                 charge REAL NOT NULL,
-                no_of_player INTEGER NOT NULL,
-                FOREIGN KEY (v_id) REFERENCES venue(v_id)
+                no_of_player INTEGER NOT NULL
             );
 
-        """
+        """)
 
         //player table
-        private const val TABLE_PLAYER_CREATE="""
+        private const val TABLE_PLAYER_CREATE=("""
             CREATE TABLE player(
             player_name TEXT NOT NULL,
             user_id INTEGER NOT NULL,
@@ -203,9 +200,9 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             contact INTEGER NOT NULl,
             FOREIGN KEY (user_id) REFERENCES User(user_id)
             );
-        """
+        """)
         //payment table
-        private const val TABLE_PAYMENT_CREATE="""
+        private const val TABLE_PAYMENT_CREATE=("""
             CREATE TABLE payment(
             p_id INTEGER PRIMARY KEY AUTOINCREMENT,
             book_id INTEGER NOT NULL,
@@ -213,10 +210,10 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             pay_method TEXT NOT NULL,
             FOREIGN KEY (book_id) REFERENCES book(book_id)
             );
-        """
+        """)
 
         //bill table
-        private const val TABLE_BILL_CREATE="""
+        private const val TABLE_BILL_CREATE=("""
             CREATE TABLE bill(
             user_id INTEGER NOT NULL,
             p_id INTEGER NOT NULL,
@@ -229,7 +226,7 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             FOREIGN KEY (p_id) REFERENCES payment(p_id),
             FOREIGN KEY (pay_method) REFERENCES payment(pay_method)
             );
-        """
+        """)
 
     }
 }
