@@ -15,9 +15,12 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         db.execSQL(TABLE_BOOK_CREATE)
         db.execSQL(TABLE_PAYMENT_CREATE)
         db.execSQL(TABLE_PLAYER_CREATE)
+        db.execSQL(TABLE_BILL_CREATE)
+        db.execSQL(TABLE_VENUE_CREATE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS player")
         db.execSQL("DROP TABLE IF EXISTS User")
         onCreate(db)
     }
@@ -37,7 +40,7 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
 
     // Check if a user exists by username and password
-    fun checkUserCredentials(userName: String, password: String): Boolean {
+    fun checkUserCredentials(userName: String, password: String): String? {
         val db = readableDatabase
         val projection = arrayOf("user_id")
         val selection = "user_name = ? AND password = ?"
@@ -52,9 +55,16 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             null,
             null
         )
-
-        val exists = cursor?.use { it.count > 0 }
-        return exists ?: false
+        var user_id = ""
+        if (cursor != null) {
+            if (cursor.moveToFirst()){
+                 user_id = cursor?.getString(cursor.getColumnIndexOrThrow("user_id")).toString()
+                return user_id
+            }else{
+                return ""
+            }
+        }
+        return user_id
     }
 
     //inserting venue table details
@@ -96,24 +106,11 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     //inserting player details
-//    fun insertplayer(player_name: String, age: String, gender: String, batsman: String, bowler: String, contact: String): Long {
-//        val db = writableDatabase
-//        val values = ContentValues().apply {
-//            put("player_name", player_name)
-//            put("age", age)
-//            put("gender", gender)
-//            put("batsman", batsman)
-//            put("bowler", bowler)
-//            put("contact", contact)
-//        }
-//        return db.insert("player", null, values)
-//    }
-
-    fun insertplayer(player_name: String,u_id: String, age: String, gender: String, batsman: String, bowler: String, contact: String): Long {
+    fun insertplayer(user_id:String,player_name: String, age: String, gender: String, batsman: String, bowler: String, contact: String): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
-            put("player_name", player_name)
-            put("user_id", u_id)
+            put("user_id",user_id)
+          put("player_name", player_name)
             put("age", age)
             put("gender", gender)
             put("batsman", batsman)
@@ -122,7 +119,6 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         }
         return db.insert("player", null, values)
     }
-
 
 
     fun getUserDetails(userId: Int): User? {
@@ -158,7 +154,7 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     //user table
     companion object {
         private const val DATABASE_NAME = "mydatabase.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
         private const val TABLE_USER_CREATE = """
             CREATE TABLE User (
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -223,13 +219,15 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         private const val TABLE_BILL_CREATE="""
             CREATE TABLE bill(
             user_id INTEGER NOT NULL,
+            p_id INTEGER NOT NULL,
+            pay_method TEXT NOT NULL,
             book_id INTEGER NOT NULL,
+            date TEXT NOT NULL,
+            msg TEXT NOT NULL,
             FOREIGN KEY (user_id) REFERENCES User(user_id),
             FOREIGN KEY (book_id) REFERENCES book(book_id),
             FOREIGN KEY (p_id) REFERENCES payment(p_id),
-            date TEXT NOT NULL,
-            FOREIGN KEY (pay_method) REFERENCES payment(pay_method),
-            msg TEXT NOT NULL,
+            FOREIGN KEY (pay_method) REFERENCES payment(pay_method)
             );
         """
 
