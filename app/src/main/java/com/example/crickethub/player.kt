@@ -23,21 +23,20 @@ class player : AppCompatActivity() {
         val contact: EditText = findViewById(R.id.contact)
         val submit: Button = findViewById(R.id.submit)
 
-        submit.setOnClickListener {
-            val player_name = player_name.text.toString().trim()
-            val age = age.text.toString().trim()
-            val gender = gender.text.toString().trim()
-            val batsman = batsman.text.toString().trim()
-            val bowler = bowler.text.toString().trim()
-            val contact = contact.text.toString().trim()
+        var str:String=player_name.text.toString().trim()
+        var str0:String="1"
+        var str1:String=age.text.toString().trim()
+        var str2:String=gender.text.toString().trim()
+        var str3:String=batsman.text.toString().trim()
+        var str4:String=bowler.text.toString().trim()
+        var str5:String=contact.text.toString().trim()
 
-            if (player_name.isEmpty() || age == null || gender.isEmpty() || batsman.isEmpty() || bowler.isEmpty() || contact.isEmpty()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+        submit.setOnClickListener {
+
 
             // Insert data into the database
-            val result = dbhelper.insertPlayer(player_name, age, gender, batsman, bowler, contact)
+          //  val result = dbhelper.insertplayer(str, age.text.toString().trim(), gender.text.toString().trim(), batsman.text.toString().trim(), bowler.text.toString().trim(), contact.text.toString().trim())
+            val result = dbhelper.insertplayer(str,str0,str1,str2,str3,str4,str5)
 
             if (result > 0) {
                 Toast.makeText(this, "Player saved successfully", Toast.LENGTH_SHORT).show()

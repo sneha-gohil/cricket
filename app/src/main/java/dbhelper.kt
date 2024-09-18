@@ -96,18 +96,33 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     //inserting player details
-    fun insertPlayer(player_name: String, age: String, gender: String, batsman: String, bowler: String, contact: String): Long {
+//    fun insertplayer(player_name: String, age: String, gender: String, batsman: String, bowler: String, contact: String): Long {
+//        val db = writableDatabase
+//        val values = ContentValues().apply {
+//            put("player_name", player_name)
+//            put("age", age)
+//            put("gender", gender)
+//            put("batsman", batsman)
+//            put("bowler", bowler)
+//            put("contact", contact)
+//        }
+//        return db.insert("player", null, values)
+//    }
+
+    fun insertplayer(player_name: String,u_id: String, age: String, gender: String, batsman: String, bowler: String, contact: String): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
             put("player_name", player_name)
+            put("user_id", u_id)
             put("age", age)
             put("gender", gender)
             put("batsman", batsman)
             put("bowler", bowler)
             put("contact", contact)
         }
-        return db.insert("Player", null, values)
+        return db.insert("player", null, values)
     }
+
 
 
     fun getUserDetails(userId: Int): User? {
