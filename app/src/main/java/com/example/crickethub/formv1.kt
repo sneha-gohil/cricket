@@ -23,6 +23,14 @@ class formv1 : AppCompatActivity() {
         val nplayer: EditText = findViewById(R.id.nplayer)
         val p1: Button = findViewById(R.id.p1)
 
-
+        p1.setOnClickListener {
+            val intent = Intent(this, payment::class.java).apply {
+                putExtra("date", date1)
+                putExtra("start_time", stime)
+                putExtra("end_time", etime)
+                putExtra("no_of_player", nplayer)
+            }
+            startActivity(intent)
+        }
     }
 }

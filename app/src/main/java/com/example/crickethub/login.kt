@@ -14,7 +14,7 @@ class login : AppCompatActivity() {
     private lateinit var dbhelper: dbhelper
     private lateinit var share: SharePrefrence
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
