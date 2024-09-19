@@ -28,6 +28,60 @@ class SharePrefrence(context: Context) {
 
     }
 
+    fun getvenuename(name: String): String? {
+        return share?.getString("v_name","")
+    }
+
+    fun saveDate(date: String) {
+        val editor = share?.edit()
+        editor?.putString("date", date)
+        editor?.apply()
+    }
+
+    fun getDate(): String? {
+        return share?.getString("date", "")
+    }
+
+    fun saveStartTime(startTime: String) {
+        val editor = share?.edit()
+        editor?.putString("start_time", startTime)
+        editor?.apply()
+    }
+
+    fun getStartTime(): String? {
+        return share?.getString("start_time", "")
+    }
+
+    fun saveEndTime(endTime: String) {
+        val editor = share?.edit()
+        editor?.putString("end_time", endTime)
+        editor?.apply()
+    }
+
+    fun getEndTime(): String? {
+        return share?.getString("end_time", "")
+    }
+
+    fun saveCharge(charge: String) {
+        val editor = share?.edit()
+        editor?.putString("charge", charge)
+        editor?.apply()
+    }
+
+    fun getCharge(): String? {
+        return share?.getString("charge", "")
+    }
+
+    fun saveNoOfPlayers(noOfPlayers: String) {
+        val editor = share?.edit()
+        editor?.putString("no_of_players", noOfPlayers)
+        editor?.apply()
+    }
+
+    fun getNoOfPlayers(): String? {
+        return share?.getString("no_of_players", "")
+    }
+
 
 
 }

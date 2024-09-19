@@ -20,6 +20,10 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS venue")
+        db.execSQL("DROP TABLE IF EXISTS bill")
+        db.execSQL("DROP TABLE IF EXISTS book")
+        db.execSQL("DROP TABLE IF EXISTS payment")
         db.execSQL("DROP TABLE IF EXISTS player")
         db.execSQL("DROP TABLE IF EXISTS User")
         onCreate(db)
@@ -79,9 +83,10 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
 
     //inserting booking table venues
-    fun insertbook(v_name: String, date: String, startTime: String, endtime: String, charge: String, no_of_player: String): Long {
+    fun insertbook(book_id:String, v_name: String, date: String, startTime: String, endtime: String, charge: String, no_of_player: String): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
+            put("book_id", book_id)
             put("v_name", v_name)
             put("date", date)
             put("start_time", startTime)
@@ -91,6 +96,33 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         }
         return db.insert("book", null, values)
     }
+
+    fun checkBooking(vName: String, date: String, startTime: String): Long? {
+        val db = readableDatabase
+        val projection = arrayOf("book_id")
+        val selection = "v_name = ? AND date = ? AND start_time = ?"
+        val selectionArgs = arrayOf(vName, date, startTime)
+
+        val cursor: Cursor? = db.query(
+            "book",
+            projection,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+
+        var bookingId: Long? = null
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                bookingId = cursor.getLong(cursor.getColumnIndexOrThrow("book_id"))
+            }
+            cursor.close()
+        }
+        return bookingId
+    }
+
 
     //selecting by venue name
     fun getVenueIdByName(v_name: String): String? {
