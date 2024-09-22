@@ -8,10 +8,11 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
+import com.example.crickethub.com.example.crickethub.SharePrefrence
 
 class registration : AppCompatActivity() {
     private lateinit var db : dbhelper
-
+    private lateinit var sharePreference: SharePrefrence
         @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +25,8 @@ class registration : AppCompatActivity() {
         val pass : EditText = findViewById(R.id.pass)
         val c1: CheckBox = findViewById(R.id.c1)
             db = dbhelper(this)
-        reg.setOnClickListener {
+
+            reg.setOnClickListener {
            val value = db.insertUser(user.text.toString().trim(),age.text.toString().trim(),email.text.toString().trim(),phone.text.toString().trim(),pass.text.toString().trim())
             if (value>0){
                 Toast.makeText(this,"Registration successfull",Toast.LENGTH_SHORT).show()

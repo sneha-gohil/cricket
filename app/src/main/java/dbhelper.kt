@@ -1,12 +1,11 @@
 package com.example.crickethub
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import java.sql.Date
-import java.sql.Time
 
 class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -114,17 +113,22 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         )
 
         var bookingId: Long? = null
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                bookingId = cursor.getLong(cursor.getColumnIndexOrThrow("book_id"))
+
+// Check if cursor is not null and contains data
+        cursor?.use {
+            if (it.moveToFirst()) {
+                // Ensure that the column name is correct
+                val bookIdIndex = it.getColumnIndexOrThrow("book_id")
+                bookingId = it.getLong(bookIdIndex)
             }
-            cursor.close()
         }
+
+// Return the booking ID (nullable Long)
         return bookingId
     }
 
 
-    //selecting by venue name
+        //selecting by venue name
     fun getVenueIdByName(v_name: String): String? {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT v_id FROM venue WHERE v_name = ?", arrayOf(v_name))
@@ -180,6 +184,69 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         val email: String,
         val contact: String
     )
+
+    //for inserting payment
+    fun insertPayment(
+        pay_id: String,
+        book_id: Long,  // Use Long since SQLite autoincrement returns Long
+        date: String,
+        pay_method: String
+    ): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put("pay_id", pay_id.toString())        // Convert pay_id to String
+            put("book_id", book_id)                 // book_id is likely a Long, so no conversion needed
+            put("date", date)                       // Ensure date is a String
+            put("pay_method", pay_method)           // Ensure pay_method is a String
+        }
+
+        // Insert the row and return the row ID of the newly inserted row, or -1 if an error occurred
+        return db.insert("payment", null, contentValues)
+    }
+
+
+    data class BookingDetails(
+        val userId: String,
+        val bookId: String,
+        val payId: String,
+        val paymentMethod: String,
+        val date: String
+    )
+
+    @SuppressLint("Range")
+    fun getBookingDetails(userId: String): BookingDetails? {
+        val db = this.readableDatabase
+        var bookingDetails: BookingDetails? = null
+
+        val cursor = db.rawQuery("SELECT u.id AS user_id, b.book_id AS book_id, p.pay_id AS pay_id, p.pay_method AS pay_method, p.date AS date FROM users u INNER JOIN book b ON u.id = b.user_id INNER JOIN payment p ON b.book_id = p.book_id WHERE u.id = ?", arrayOf(userId))
+
+        if (cursor.moveToFirst()) {
+            bookingDetails = BookingDetails(
+                userId = cursor.getString(cursor.getColumnIndex("user_id")),
+                bookId = cursor.getString(cursor.getColumnIndex("book_id")),
+                payId = cursor.getString(cursor.getColumnIndex("pay_id")),
+                paymentMethod = cursor.getString(cursor.getColumnIndex("pay_method")),
+                date = cursor.getString(cursor.getColumnIndex("date"))
+            )
+        }
+
+        cursor.close()
+        return bookingDetails
+    }
+
+    fun insertBill(user_id: String, pay_id: String, pay_method: String, book_id: String, date: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put("user_id", user_id)
+            put("p_id", pay_id)
+            put("pay_method", pay_method)
+            put("book_id", book_id)
+            put("date", date)
+        }
+        val result = db.insert("bill", null, contentValues)
+        db.close()
+        return result
+    }
 
 
 
@@ -252,7 +319,6 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             pay_method TEXT NOT NULL,
             book_id INTEGER NOT NULL,
             date TEXT NOT NULL,
-            msg TEXT NOT NULL,
             FOREIGN KEY (user_id) REFERENCES User(user_id),
             FOREIGN KEY (book_id) REFERENCES book(book_id),
             FOREIGN KEY (p_id) REFERENCES payment(p_id),

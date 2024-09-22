@@ -15,6 +15,12 @@
         android:theme="@style/Theme.Crickethub"
         tools:targetApi="31">
         <activity
+            android:name=".pay"
+            android:exported="false" />
+        <activity
+            android:name=".Bill"
+            android:exported="false" />
+        <activity
             android:name=".profile"
             android:exported="false" />
         <activity
@@ -22,18 +28,12 @@
             android:exported="false" />
         <activity
             android:name=".player"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".history1"
             android:exported="false" />
         <activity
-            android:name=".profile1"
-            android:exported="false" />
-        <activity
             android:name=".home1"
-            android:exported="false" />
-        <activity
-            android:name=".payment"
             android:exported="false" />
         <activity
             android:name=".formv3"
@@ -46,7 +46,8 @@
             android:exported="false" />
         <activity
             android:name=".slott"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="DuplicateActivity" />
         <activity
             android:name=".homepage"
             android:exported="false" />

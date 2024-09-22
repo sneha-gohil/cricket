@@ -27,6 +27,7 @@ class login : AppCompatActivity() {
         dbhelper = dbhelper(this)
         share = SharePrefrence(this)
 
+
         register_now.setOnClickListener {
             val intent = Intent(this, registration::class.java)
             startActivity(intent)
