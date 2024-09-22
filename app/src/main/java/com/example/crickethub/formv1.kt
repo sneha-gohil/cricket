@@ -59,19 +59,43 @@ class formv1 : AppCompatActivity() {
                 // Get total charges
                 val totalCharges = display.text.toString().split("Rs. ")[1]
 
-                // Navigate to payment activity and pass booking details
-                val intent = Intent(this, pay::class.java).apply {
-                    putExtra("date", date1.text.toString())
-                    putExtra("start_time", stime.text.toString())
-                    putExtra("end_time", etime.text.toString())
-                    putExtra("no_of_players", nplayer.text.toString())
-                    putExtra("charges", totalCharges)
+                // Venue name (can be dynamically selected or hardcoded)
+                val venueName = "Venue 1"
+
+                // Insert booking details into the database
+                val dbHelper = dbhelper(this)
+                val result = dbHelper.insertbook(
+                    v_name = venueName,
+                    date = date1.text.toString(),
+                    startTime = stime.text.toString(),
+                    endtime = etime.text.toString(),
+                    charge = totalCharges,
+                    no_of_player = nplayer.text.toString()
+                )
+
+                if (result > 0) {
+                    // Successfully inserted, pass the book_id (result) to the next activity
+                    val intent = Intent(this, pay::class.java).apply {
+                        putExtra("book_id", result.toString()) // The auto-incremented book_id
+                        putExtra("date", date1.text.toString())
+                        putExtra("start_time", stime.text.toString())
+                        putExtra("end_time", etime.text.toString())
+                        putExtra("no_of_players", nplayer.text.toString())
+                        putExtra("charges", totalCharges)
+                    }
+                    startActivity(intent)
+                } else {
+                    // Insertion failed
+                    Toast.makeText(this, "Booking failed, please try again", Toast.LENGTH_SHORT).show()
                 }
-                startActivity(intent)
+
             } else {
                 Toast.makeText(this, "Please fill all fields and calculate charges", Toast.LENGTH_SHORT).show()
             }
         }
+
+    }
+
     }
 
     private fun showTimePickerDialog(editText: EditText) {

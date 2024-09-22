@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -93,8 +94,15 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             put("charge", charge)
             put("no_of_player", no_of_player)
         }
-        return db.insert("book", null, values)
+        return try {
+            val rowId = db.insertOrThrow("book", null, values)
+            rowId // This is the auto-incremented book_id
+        } catch (e: Exception) {
+            Log.e("DBHelper", "Error inserting data: ${e.message}")
+            -1L  // Return -1 if an error occurs
+        }
     }
+
 
     fun checkBooking(vName: String, date: String, startTime: String): Long? {
         val db = readableDatabase
