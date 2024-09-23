@@ -60,7 +60,7 @@ class formv1 : AppCompatActivity() {
                 val totalCharges = display.text.toString().split("Rs. ")[1]
 
                 // Venue name (can be dynamically selected or hardcoded)
-                val venueName = "Venue 1"
+                val venueName = "Cricket haven"
 
                 // Insert booking details into the database
                 val dbHelper = dbhelper(this)
@@ -93,8 +93,6 @@ class formv1 : AppCompatActivity() {
                 Toast.makeText(this, "Please fill all fields and calculate charges", Toast.LENGTH_SHORT).show()
             }
         }
-
-    }
 
     }
 

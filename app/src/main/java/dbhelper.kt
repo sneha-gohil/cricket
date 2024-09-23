@@ -83,10 +83,9 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
 
     //inserting booking table venues
-    fun insertbook(book_id:String, v_name: String, date: String, startTime: String, endtime: String, charge: String, no_of_player: String): Long {
+    fun insertbook(v_name: String, date: String, startTime: String, endtime: String, charge: String, no_of_player: String): Long {
         val db = writableDatabase
         val values = ContentValues().apply {
-            put("book_id", book_id)
             put("v_name", v_name)
             put("date", date)
             put("start_time", startTime)
@@ -255,6 +254,19 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         db.close()
         return result
     }
+
+    fun getBillDetails(bookId: Long): Cursor? {
+        val db = readableDatabase
+        val query = ("""
+        SELECT u.user_id, b.book_id, p.pay_id, p.pay_method, b.date
+        FROM book b
+        JOIN payment p ON b.book_id = p.book_id
+        JOIN user u ON b.user_id = u.user_id
+        WHERE b.book_id = ?
+    """)
+        return db.rawQuery(query, arrayOf(bookId.toString()))
+    }
+
 
 
 

@@ -1,18 +1,15 @@
 package com.example.crickethub
 
+import bill
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.crickethub.com.example.crickethub.SharePrefrence
 
 class pay : AppCompatActivity() {
 
@@ -23,7 +20,6 @@ class pay : AppCompatActivity() {
         setContentView(R.layout.activity_pay)
 
         val submit: Button = findViewById(R.id.submit)
-        val download: Button = findViewById(R.id.download)
         val showreceipt: Button = findViewById(R.id.showreceipt)
         val sp1: Spinner = findViewById(R.id.sp1)
 
@@ -36,7 +32,9 @@ class pay : AppCompatActivity() {
             if (sp1.selectedItem == null || sp1.selectedItemPosition == 0) {
                 Toast.makeText(this, "Please select a venue", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Error submitting", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Payment successfull", Toast.LENGTH_SHORT).show()
+                val intent=Intent(this,bill::class.java)
+                startActivity(intent)
             }
         }
 
