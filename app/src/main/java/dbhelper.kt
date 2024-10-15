@@ -1,5 +1,6 @@
 package com.example.crickethub
 
+import BookingData
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
@@ -17,6 +18,8 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         db.execSQL(TABLE_PLAYER_CREATE)
         db.execSQL(TABLE_BILL_CREATE)
         db.execSQL(TABLE_VENUE_CREATE)
+        db.execSQL(TABLE_ADMIN_CREATE)
+        db.execSQL(TABLE_ADMINPAGE_CREATE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -69,16 +72,6 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             }
         }
         return user_id
-    }
-
-    //inserting venue table details
-    fun insertvenue(v_id: String, v_name: String): Long {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put("v_id", v_id)
-            put("v_name", v_name)
-        }
-        return db.insert("venue", null, values)
     }
 
 
@@ -135,19 +128,6 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
 
-        //selecting by venue name
-    fun getVenueIdByName(v_name: String): String? {
-        val db = readableDatabase
-        val cursor = db.rawQuery("SELECT v_id FROM venue WHERE v_name = ?", arrayOf(v_name))
-        return if (cursor.moveToFirst()) {
-            cursor.getString(cursor.getColumnIndexOrThrow("v_id"))
-        } else {
-            null
-        }.also {
-            cursor.close()
-        }
-    }
-
     //inserting player details
     fun insertplayer(user_id:String,player_name: String, age: String, gender: String, batsman: String, bowler: String, contact: String): Long {
         val db = writableDatabase
@@ -164,7 +144,7 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
 
-    fun getUserDetails(userId: Int): User? {
+    fun getUserDetails(userId: String?): User? {
         val db = readableDatabase
         val cursor = db.rawQuery(
             "SELECT user_name, age, email, contact FROM User WHERE user_id = ?",
@@ -193,21 +173,13 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     )
 
     //for inserting payment
-    fun insertPayment(
-        pay_id: String,
-        book_id: Long,  // Use Long since SQLite autoincrement returns Long
-        date: String,
-        pay_method: String
-    ): Long {
+    fun insertPayment(book_id: String, date: String, pay_method: String): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues().apply {
-            put("pay_id", pay_id.toString())        // Convert pay_id to String
-            put("book_id", book_id)                 // book_id is likely a Long, so no conversion needed
-            put("date", date)                       // Ensure date is a String
-            put("pay_method", pay_method)           // Ensure pay_method is a String
+            put("book_id", book_id)        // book_id as a String
+            put("date", date)              // date as a String
+            put("pay_method", pay_method)  // pay_method as a String
         }
-
-        // Insert the row and return the row ID of the newly inserted row, or -1 if an error occurred
         return db.insert("payment", null, contentValues)
     }
 
@@ -255,16 +227,95 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         return result
     }
 
-    fun getBillDetails(bookId: Long): Cursor? {
+    fun getBillDetails(payId: Long): Cursor? {
         val db = readableDatabase
         val query = ("""
         SELECT u.user_id, b.book_id, p.pay_id, p.pay_method, b.date
         FROM book b
         JOIN payment p ON b.book_id = p.book_id
         JOIN user u ON b.user_id = u.user_id
-        WHERE b.book_id = ?
+        WHERE p.pay_id = ?
     """)
-        return db.rawQuery(query, arrayOf(bookId.toString()))
+        return db.rawQuery(query, arrayOf(payId.toString()))
+    }
+
+
+
+    fun getLastBookingDetails(): Map<String, String> {
+        val db = this.readableDatabase
+        val bookingDetails = mutableMapOf<String, String>()
+
+        // Query to get the last booking details
+        val cursor = db.rawQuery("SELECT user_id, book_id, pay_id FROM book_table ORDER BY book_id DESC LIMIT 1", null)
+
+        if (cursor.moveToFirst()) {
+            bookingDetails["user_id"] = cursor.getString(cursor.getColumnIndexOrThrow("user_id"))
+            bookingDetails["book_id"] = cursor.getString(cursor.getColumnIndexOrThrow("book_id"))
+            bookingDetails["pay_id"] = cursor.getString(cursor.getColumnIndexOrThrow("pay_id"))
+        }
+        cursor.close()
+        db.close()
+        return bookingDetails
+    }
+
+    fun updateUser(userId: String, userName: String, age: String, email: String, contact: String): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("user_name", userName)
+            put("age", age)
+            put("email", email)
+            put("contact", contact)
+        }
+        // Update the user record with the matching user_id
+        return db.update("User", values, "user_id = ?", arrayOf(userId))
+    }
+
+
+    fun insertAdmin(username: String, password: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put("username", username)
+            put("password", password)
+        }
+        return db.insert("admin", null, contentValues)
+    }
+
+    fun insertAdminPageDetails(userId: Int, bookId: Int, payMethod: String, date: String): Long {
+        val db = writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put("user_id", userId)
+        contentValues.put("book_id", bookId)
+        contentValues.put("pay_method", payMethod)
+        contentValues.put("date", date)
+
+        return db.insert("adminpage", null, contentValues)
+    }
+
+    fun getAllBookings(): List<BookingData> {
+        val bookings = mutableListOf<BookingData>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT user_id, book_id, pay_method, date FROM adminpage", null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val userId = cursor.getString(cursor.getColumnIndexOrThrow("user_id"))
+                val bookId = cursor.getString(cursor.getColumnIndexOrThrow("book_id"))
+                val payMethod = cursor.getString(cursor.getColumnIndexOrThrow("pay_method"))
+                val date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+                bookings.add(BookingData(userId, bookId, payMethod, date))
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return bookings
+    }
+
+
+    fun deleteAdminPageData(userId: Int, bookId: Int): Boolean {
+        val db = this.writableDatabase
+        val result = db.delete("adminpage", "user_id=? AND book_id=?", arrayOf(userId.toString(), bookId.toString()))
+        return result > 0
     }
 
 
@@ -328,6 +379,7 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             date DATE NOT NULL,
             pay_method TEXT NOT NULL,
             FOREIGN KEY (book_id) REFERENCES book(book_id)
+            FOREIGN KEY (date) REFERENCES book(date)
             );
         """)
 
@@ -346,5 +398,25 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             );
         """)
 
+        private const val TABLE_ADMIN_CREATE=("""
+                CREATE TABLE admin (
+                admin_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL,
+                password TEXT NOT NULL
+                );
+                """)
+
+        private const val TABLE_ADMINPAGE_CREATE=("""
+            CREATE TABLE adminpage(
+            user_id INTEGER NOT NULL,
+            book_id INTEGER NOT NULL,
+            pay_method TEXT NOT NULL,
+            date TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES User(user_id),
+            FOREIGN KEY (book_id) REFERENCES book(book_id),
+            FOREIGN KEY (pay_method) REFERENCES payment(pay_method)
+            FOREIGN KEY (date) REFERENCES payment(date)
+            )
+        """)
     }
 }

@@ -73,6 +73,36 @@ class SharePrefrence(context: Context) {
         return share?.getString("no_of_players", "")
     }
 
+    fun saveBookId(bookId: String) {
+        val editor = share?.edit()
+        editor?.putString("book_id", bookId)
+        editor?.apply()
+    }
 
+    fun getBookId(): String? {
+        return share?.getString("book_id", "")
+    }
+
+    fun savepayid(pay_id:String){
+       val editor=share?.edit()
+        editor?.putString("pay_id",pay_id)
+        editor?.apply()
+    }
+
+    fun getpayid(): String? {
+        return share?.getString("pay_id", "")
+    }
+
+
+    fun savePaymentMethod(paymentMethod: String) {
+        val editor = share?.edit()
+        editor?.putString("pay_method", paymentMethod)
+        editor?.apply()
+    }
+
+    fun getPaymentMethod(): String? {
+        return share?.getString("pay_method", "")
+    }
 
 }
+

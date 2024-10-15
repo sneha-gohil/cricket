@@ -3,4 +3,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#88CBFE</color>
+    <color name="colorPrimaryDark">#000000</color> <!-- Dark color for status bar -->
 </resources>

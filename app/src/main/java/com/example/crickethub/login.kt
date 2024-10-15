@@ -24,12 +24,18 @@ class login : AppCompatActivity() {
         val user: EditText = findViewById(R.id.user)
         val pass: EditText = findViewById(R.id.pass)
         val login: Button = findViewById(R.id.login)
+        val logintext:TextView=findViewById(R.id.logintext)
         dbhelper = dbhelper(this)
         share = SharePrefrence(this)
 
 
+        logintext.setOnClickListener {
+            val intent=Intent(this,admin::class.java)
+            startActivity(intent)
+        }
+
         register_now.setOnClickListener {
-            val intent = Intent(this, registration::class.java)
+            val intent = Intent(this, register::class.java)
             startActivity(intent)
         }
         login.setOnClickListener {
