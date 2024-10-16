@@ -1,13 +1,16 @@
 package com.example.crickethub
 
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.crickethub.com.example.crickethub.SharePrefrence
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -15,6 +18,9 @@ class formv1 : AppCompatActivity() {
     private lateinit var stime: EditText
     private lateinit var etime: EditText
     private lateinit var display: TextView
+    private lateinit var date1:EditText
+    private val calendar = Calendar.getInstance()
+    private lateinit var sharePrefrence: SharePrefrence
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,13 +33,44 @@ class formv1 : AppCompatActivity() {
         display = findViewById(R.id.display)
         val p1: Button = findViewById(R.id.p1)
 
-        // Set time pickers for start_time and end_time
         stime.setOnClickListener {
             showTimePickerDialog(stime)
         }
 
         etime.setOnClickListener {
             showTimePickerDialog(etime)
+        }
+
+        sharePrefrence=SharePrefrence(this)
+
+        fun showDatePickerDialog() {
+            val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                // Update the calendar object with the selected date
+                calendar.set(Calendar.YEAR, year)
+                calendar.set(Calendar.MONTH, month)
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                // Format the date and set it in the EditText
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val formattedDate = dateFormat.format(calendar.time)
+
+                // Set the formatted date to the EditText (converted to Editable)
+                date1.text = Editable.Factory.getInstance().newEditable(formattedDate)
+            }
+
+            // Show the DatePickerDialog
+            DatePickerDialog(
+                this,
+                dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+
+
+        date1.setOnClickListener {
+            showDatePickerDialog()
         }
 
         // Calculate charges when end_time is entered
@@ -74,20 +111,29 @@ class formv1 : AppCompatActivity() {
                 )
 
                 if (result > 0) {
-                    // Successfully inserted, pass the book_id (result) to the next activity
+                    // Store user_id in SharedPreferences
+                    val userId = sharePrefrence.getUserId() ?: "Unknown"  // Assuming it's fetched or hardcoded for now
+
+                    // Save details in SharedPreferences
+                    sharePrefrence.saveBookId(result.toString())
+                    sharePrefrence.saveDate(date1.text.toString())
+                    sharePrefrence.saveStartTime(stime.text.toString())
+                    sharePrefrence.saveEndTime(etime.text.toString())
+                    sharePrefrence.saveNoOfPlayers(nplayer.text.toString())
+
+                    // Pass details to Payment Activity
                     val intent = Intent(this, pay::class.java).apply {
-                        putExtra("book_id", result.toString()) // The auto-incremented book_id
+                        putExtra("book_id", result.toString())  // Auto-incremented book_id
                         putExtra("date", date1.text.toString())
                         putExtra("start_time", stime.text.toString())
                         putExtra("end_time", etime.text.toString())
                         putExtra("no_of_players", nplayer.text.toString())
                         putExtra("charges", totalCharges)
+                        putExtra("user_id", userId)  // Include user_id in the intent
                     }
                     startActivity(intent)
-                } else {
-                    // Insertion failed
-                    Toast.makeText(this, "Booking failed, please try again", Toast.LENGTH_SHORT).show()
                 }
+
 
             } else {
                 Toast.makeText(this, "Please fill all fields and calculate charges", Toast.LENGTH_SHORT).show()

@@ -1,47 +1,71 @@
 package com.example.crickethub
 
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.crickethub.com.example.crickethub.SharePrefrence
 
 class bil : AppCompatActivity() {
 
-    private lateinit var sharePrefrence: SharePrefrence
+    private lateinit var dbHelper: dbhelper
+    private lateinit var tvUserId: TextView
+    private lateinit var tvBookId: TextView
+    private lateinit var tvPayId: TextView
+    private lateinit var tvPaymentMethod: TextView
+    private lateinit var tvDate: TextView
+    private lateinit var btnDownloadReceipt: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bil)
 
-        val tvUserId: TextView = findViewById(R.id.useridtext)
-        val tvBookId: TextView = findViewById(R.id.bookidtext)
-        val tvPayId: TextView = findViewById(R.id.payidtext)
-        val tvPaymentMethod: TextView = findViewById(R.id.paymentmethod)
-        val tvDate: TextView = findViewById(R.id.datebill)
+        dbHelper = dbhelper(this)
 
-        // Initialize SharedPreferences
-        val bookId = intent.getStringExtra("book_id")
-        val date = intent.getStringExtra("date")
+        // Initialize TextViews and Button
+        tvUserId = findViewById(R.id.useridtext)
+        tvBookId = findViewById(R.id.bookidtext)
+        tvPayId = findViewById(R.id.payidtext)
+        tvPaymentMethod = findViewById(R.id.paymentmethod)
+        tvDate = findViewById(R.id.datebill)
+        btnDownloadReceipt = findViewById(R.id.button)
 
-        sharePrefrence= SharePrefrence(this)
+        // Get payment ID from the intent
+        val paymentId = intent.getLongExtra("PAYMENT_ID", -1)
 
-        // Retrieve stored booking and payment details from SharedPreferences
-        val userId = sharePrefrence.getUserId() ?: "N/A"
-        val payId = sharePrefrence.getpayid() ?: "N/A"
-        val paymentMethod = sharePrefrence.getPaymentMethod() ?: "N/A"
+        // Fetch and display the bill details
+        if (paymentId != -1L) {
+            loadBillDetails(paymentId)
+        } else {
+            // Handle the case where payment ID is invalid
+        }
 
-        // Find TextViews in the layout to display the details
+        // Set a click listener for download receipt (you can implement this to save or share the receipt)
+        btnDownloadReceipt.setOnClickListener {
+            // Implement download receipt functionality here
+        }
+    }
 
+    private fun loadBillDetails(payId: Long) {
+        // Fetch the details from the database
+        val cursor = dbHelper.getBillDetails(payId)
 
-        // Set the text for each TextView with the retrieved details
-        tvUserId.text = "$userId"
-        tvBookId.text = "$bookId"
-        tvPayId.text = "$payId"
-        tvPaymentMethod.text = "$paymentMethod"
-        tvDate.text = "$date"
+        cursor?.let { cursor ->
+            if (cursor.moveToFirst()) {
+                // Fetch user details
+                val userId = cursor.getString(cursor.getColumnIndexOrThrow("user_id"))
+                val bookId = cursor.getString(cursor.getColumnIndexOrThrow("book_id"))
+                val payId = cursor.getString(cursor.getColumnIndexOrThrow("pay_id"))
+                val paymentMethod = cursor.getString(cursor.getColumnIndexOrThrow("pay_method"))
+                val date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+
+                // Set the values to the TextViews
+                tvUserId.text = userId
+                tvBookId.text = bookId
+                tvPayId.text = payId
+                tvPaymentMethod.text = paymentMethod
+                tvDate.text = date
+            }
+            cursor.close()
+        }
     }
 }
-
-
-

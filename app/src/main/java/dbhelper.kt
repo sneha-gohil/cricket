@@ -96,37 +96,6 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
 
-    fun checkBooking(vName: String, date: String, startTime: String): Long? {
-        val db = readableDatabase
-        val projection = arrayOf("book_id")
-        val selection = "v_name = ? AND date = ? AND start_time = ?"
-        val selectionArgs = arrayOf(vName, date, startTime)
-
-        val cursor: Cursor? = db.query(
-            "book",
-            projection,
-            selection,
-            selectionArgs,
-            null,
-            null,
-            null
-        )
-
-        var bookingId: Long? = null
-
-// Check if cursor is not null and contains data
-        cursor?.use {
-            if (it.moveToFirst()) {
-                // Ensure that the column name is correct
-                val bookIdIndex = it.getColumnIndexOrThrow("book_id")
-                bookingId = it.getLong(bookIdIndex)
-            }
-        }
-
-// Return the booking ID (nullable Long)
-        return bookingId
-    }
-
 
     //inserting player details
     fun insertplayer(user_id:String,player_name: String, age: String, gender: String, batsman: String, bowler: String, contact: String): Long {
@@ -193,71 +162,6 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     )
 
     @SuppressLint("Range")
-    fun getBookingDetails(userId: String): BookingDetails? {
-        val db = this.readableDatabase
-        var bookingDetails: BookingDetails? = null
-
-        val cursor = db.rawQuery("SELECT u.id AS user_id, b.book_id AS book_id, p.pay_id AS pay_id, p.pay_method AS pay_method, p.date AS date FROM users u INNER JOIN book b ON u.id = b.user_id INNER JOIN payment p ON b.book_id = p.book_id WHERE u.id = ?", arrayOf(userId))
-
-        if (cursor.moveToFirst()) {
-            bookingDetails = BookingDetails(
-                userId = cursor.getString(cursor.getColumnIndex("user_id")),
-                bookId = cursor.getString(cursor.getColumnIndex("book_id")),
-                payId = cursor.getString(cursor.getColumnIndex("pay_id")),
-                paymentMethod = cursor.getString(cursor.getColumnIndex("pay_method")),
-                date = cursor.getString(cursor.getColumnIndex("date"))
-            )
-        }
-
-        cursor.close()
-        return bookingDetails
-    }
-
-    fun insertBill(user_id: String, pay_id: String, pay_method: String, book_id: String, date: String): Long {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put("user_id", user_id)
-            put("p_id", pay_id)
-            put("pay_method", pay_method)
-            put("book_id", book_id)
-            put("date", date)
-        }
-        val result = db.insert("bill", null, contentValues)
-        db.close()
-        return result
-    }
-
-    fun getBillDetails(payId: Long): Cursor? {
-        val db = readableDatabase
-        val query = ("""
-        SELECT u.user_id, b.book_id, p.pay_id, p.pay_method, b.date
-        FROM book b
-        JOIN payment p ON b.book_id = p.book_id
-        JOIN user u ON b.user_id = u.user_id
-        WHERE p.pay_id = ?
-    """)
-        return db.rawQuery(query, arrayOf(payId.toString()))
-    }
-
-
-
-    fun getLastBookingDetails(): Map<String, String> {
-        val db = this.readableDatabase
-        val bookingDetails = mutableMapOf<String, String>()
-
-        // Query to get the last booking details
-        val cursor = db.rawQuery("SELECT user_id, book_id, pay_id FROM book_table ORDER BY book_id DESC LIMIT 1", null)
-
-        if (cursor.moveToFirst()) {
-            bookingDetails["user_id"] = cursor.getString(cursor.getColumnIndexOrThrow("user_id"))
-            bookingDetails["book_id"] = cursor.getString(cursor.getColumnIndexOrThrow("book_id"))
-            bookingDetails["pay_id"] = cursor.getString(cursor.getColumnIndexOrThrow("pay_id"))
-        }
-        cursor.close()
-        db.close()
-        return bookingDetails
-    }
-
     fun updateUser(userId: String, userName: String, age: String, email: String, contact: String): Int {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -271,24 +175,51 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
 
-    fun insertAdmin(username: String, password: String): Long {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put("username", username)
-            put("password", password)
+    fun getPaymentDetails(payId: String): Map<String, String> {
+        val db = this.readableDatabase
+        val paymentDetails = mutableMapOf<String, String>()
+
+        // Query to get payment details based on pay_id
+        val cursor = db.rawQuery("SELECT pay_method, date FROM payment WHERE p_id = ?", arrayOf(payId))
+
+        if (cursor.moveToFirst()) {
+            paymentDetails["pay_method"] = cursor.getString(cursor.getColumnIndexOrThrow("pay_method"))
+            paymentDetails["date"] = cursor.getString(cursor.getColumnIndexOrThrow("date"))
         }
-        return db.insert("admin", null, contentValues)
+        cursor.close()
+        return paymentDetails
     }
 
-    fun insertAdminPageDetails(userId: Int, bookId: Int, payMethod: String, date: String): Long {
-        val db = writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put("user_id", userId)
-        contentValues.put("book_id", bookId)
-        contentValues.put("pay_method", payMethod)
-        contentValues.put("date", date)
+    fun getLastPaymentId(bookId: String): String {
+        val db = this.readableDatabase
+        var payId = ""
 
-        return db.insert("adminpage", null, contentValues)
+        val cursor = db.rawQuery("SELECT p_id FROM payment WHERE book_id = ? ORDER BY p_id DESC LIMIT 1", arrayOf(bookId))
+
+        if (cursor.moveToFirst()) {
+            payId = cursor.getString(cursor.getColumnIndexOrThrow("p_id"))
+        }
+        cursor.close()
+        return payId
+    }
+
+    fun getLastBookingDetails(): Map<String, String>? {
+        val db = this.readableDatabase
+        val bookingDetails = mutableMapOf<String, String>()
+
+        // Query to get the last booking details based on the highest book_id
+        val cursor = db.rawQuery("SELECT user_id, book_id, date FROM book ORDER BY book_id DESC LIMIT 1", null)
+
+        if (cursor.moveToFirst()) {
+            bookingDetails["user_id"] = cursor.getString(cursor.getColumnIndexOrThrow("user_id"))
+            bookingDetails["book_id"] = cursor.getString(cursor.getColumnIndexOrThrow("book_id"))
+            bookingDetails["date"] = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+        }
+
+        cursor.close()
+        db.close()
+
+        return if (bookingDetails.isNotEmpty()) bookingDetails else null
     }
 
     fun getAllBookings(): List<BookingData> {
@@ -312,13 +243,16 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
 
-    fun deleteAdminPageData(userId: Int, bookId: Int): Boolean {
-        val db = this.writableDatabase
-        val result = db.delete("adminpage", "user_id=? AND book_id=?", arrayOf(userId.toString(), bookId.toString()))
-        return result > 0
+    fun getBillDetails(payId: Long): Cursor? {
+        val db = this.readableDatabase
+        return db.rawQuery(
+            "SELECT u.user_id, b.book_id, p.pay_id, p.pay_method, p.date " +
+                    "FROM user_table u " +
+                    "JOIN booking_table b ON u.user_id = b.user_id " +
+                    "JOIN payment_table p ON b.book_id = p.book_id " +
+                    "WHERE p.pay_id = ?", arrayOf(payId.toString())
+        )
     }
-
-
 
 
     //user table

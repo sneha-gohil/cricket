@@ -57,6 +57,7 @@ class pay : AppCompatActivity() {
                     val intent = Intent(this, bil::class.java)
                     intent.putExtra("book_id", bookId)
                     intent.putExtra("date", date)
+                    intent.putExtra("PAYMENT_ID", paymentId)
                     startActivity(intent)
 
                 } else {
