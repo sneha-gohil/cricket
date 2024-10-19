@@ -73,6 +73,15 @@ class SharePrefrence(context: Context) {
         return share?.getString("no_of_players", "")
     }
 
+    fun charges(charge: String) {
+        val editor = share?.edit()
+        editor?.putString("charge", charge)
+        editor?.apply()
+    }
+    fun charges(): String? {
+        return share?.getString("charges", "")
+    }
+
     fun saveBookId(bookId: String) {
         val editor = share?.edit()
         editor?.putString("book_id", bookId)

@@ -9,7 +9,7 @@
     app:cardElevation="4dp"
     app:cardCornerRadius="16dp"
     android:background="@color/white"
-    tools:context=".bil">
+    tools:context=".bill">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

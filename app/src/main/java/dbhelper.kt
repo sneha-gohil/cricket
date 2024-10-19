@@ -1,13 +1,12 @@
 package com.example.crickethub
 
-import BookingData
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
+
 
 class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -86,13 +85,7 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             put("charge", charge)
             put("no_of_player", no_of_player)
         }
-        return try {
-            val rowId = db.insertOrThrow("book", null, values)
-            rowId // This is the auto-incremented book_id
-        } catch (e: Exception) {
-            Log.e("DBHelper", "Error inserting data: ${e.message}")
-            -1L  // Return -1 if an error occurs
-        }
+        return db.insert("book", null, values)
     }
 
 
@@ -141,26 +134,6 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         val contact: String
     )
 
-    //for inserting payment
-    fun insertPayment(book_id: String, date: String, pay_method: String): Long {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put("book_id", book_id)        // book_id as a String
-            put("date", date)              // date as a String
-            put("pay_method", pay_method)  // pay_method as a String
-        }
-        return db.insert("payment", null, contentValues)
-    }
-
-
-    data class BookingDetails(
-        val userId: String,
-        val bookId: String,
-        val payId: String,
-        val paymentMethod: String,
-        val date: String
-    )
-
     @SuppressLint("Range")
     fun updateUser(userId: String, userName: String, age: String, email: String, contact: String): Int {
         val db = writableDatabase
@@ -175,84 +148,27 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
 
-    fun getPaymentDetails(payId: String): Map<String, String> {
-        val db = this.readableDatabase
-        val paymentDetails = mutableMapOf<String, String>()
-
-        // Query to get payment details based on pay_id
-        val cursor = db.rawQuery("SELECT pay_method, date FROM payment WHERE p_id = ?", arrayOf(payId))
-
-        if (cursor.moveToFirst()) {
-            paymentDetails["pay_method"] = cursor.getString(cursor.getColumnIndexOrThrow("pay_method"))
-            paymentDetails["date"] = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+    fun insertPaymentDetails(userId: String, bookId: String, paymentMethod: String, date: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put("user_id", userId)
+            put("book_id", bookId)
+            put("pay_method", paymentMethod)
+            put("date", date)
         }
-        cursor.close()
-        return paymentDetails
+        return db.insert("payment", null, contentValues)
     }
 
-    fun getLastPaymentId(bookId: String): String {
-        val db = this.readableDatabase
-        var payId = ""
-
-        val cursor = db.rawQuery("SELECT p_id FROM payment WHERE book_id = ? ORDER BY p_id DESC LIMIT 1", arrayOf(bookId))
-
-        if (cursor.moveToFirst()) {
-            payId = cursor.getString(cursor.getColumnIndexOrThrow("p_id"))
-        }
-        cursor.close()
-        return payId
-    }
-
-    fun getLastBookingDetails(): Map<String, String>? {
-        val db = this.readableDatabase
-        val bookingDetails = mutableMapOf<String, String>()
-
-        // Query to get the last booking details based on the highest book_id
-        val cursor = db.rawQuery("SELECT user_id, book_id, date FROM book ORDER BY book_id DESC LIMIT 1", null)
-
-        if (cursor.moveToFirst()) {
-            bookingDetails["user_id"] = cursor.getString(cursor.getColumnIndexOrThrow("user_id"))
-            bookingDetails["book_id"] = cursor.getString(cursor.getColumnIndexOrThrow("book_id"))
-            bookingDetails["date"] = cursor.getString(cursor.getColumnIndexOrThrow("date"))
-        }
-
-        cursor.close()
-        db.close()
-
-        return if (bookingDetails.isNotEmpty()) bookingDetails else null
-    }
-
-    fun getAllBookings(): List<BookingData> {
-        val bookings = mutableListOf<BookingData>()
-        val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT user_id, book_id, pay_method, date FROM adminpage", null)
-
-        if (cursor.moveToFirst()) {
-            do {
-                val userId = cursor.getString(cursor.getColumnIndexOrThrow("user_id"))
-                val bookId = cursor.getString(cursor.getColumnIndexOrThrow("book_id"))
-                val payMethod = cursor.getString(cursor.getColumnIndexOrThrow("pay_method"))
-                val date = cursor.getString(cursor.getColumnIndexOrThrow("date"))
-                bookings.add(BookingData(userId, bookId, payMethod, date))
-            } while (cursor.moveToNext())
-        }
-
-        cursor.close()
-        db.close()
-        return bookings
-    }
 
 
     fun getBillDetails(payId: Long): Cursor? {
         val db = this.readableDatabase
         return db.rawQuery(
-            "SELECT u.user_id, b.book_id, p.pay_id, p.pay_method, p.date " +
-                    "FROM user_table u " +
-                    "JOIN booking_table b ON u.user_id = b.user_id " +
-                    "JOIN payment_table p ON b.book_id = p.book_id " +
-                    "WHERE p.pay_id = ?", arrayOf(payId.toString())
+            "SELECT * FROM payment WHERE pay_id = ?",
+            arrayOf(payId.toString())
         )
     }
+
 
 
     //user table
@@ -310,9 +226,11 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             CREATE TABLE payment(
             p_id INTEGER PRIMARY KEY AUTOINCREMENT,
             book_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
             date DATE NOT NULL,
             pay_method TEXT NOT NULL,
             FOREIGN KEY (book_id) REFERENCES book(book_id)
+            FOREIGN KEY (user_id) REFERENCES book(user_id)
             FOREIGN KEY (date) REFERENCES book(date)
             );
         """)

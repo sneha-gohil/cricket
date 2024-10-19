@@ -1,6 +1,5 @@
 package com.example.crickethub
 
-import adminpage
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -36,8 +35,6 @@ class admin : AppCompatActivity() {
                 // Check if the entered credentials match the hardcoded admin credentials
                 if (username == adminUsername && password == adminPassword) {
                     // Successful login, navigate to adminpage activity
-                    val intent = Intent(this, adminpage::class.java)
-                    startActivity(intent)
                 } else {
                     // Invalid credentials
                     Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show()
