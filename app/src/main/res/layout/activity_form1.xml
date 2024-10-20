@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".formv1">
+    tools:context=".form1">
 
     <TextView
         android:id="@+id/textView4"
@@ -78,7 +78,7 @@
         app:layout_constraintVertical_bias="0.594" />
 
     <Button
-        android:id="@+id/pay1"
+        android:id="@+id/p1"
         android:layout_width="157dp"
         android:layout_height="54dp"
         android:text="Payment"
@@ -160,7 +160,7 @@
         app:layout_constraintVertical_bias="0.734" />
 
     <TextView
-        android:id="@+id/display"
+        android:id="@+id/disply"
         android:layout_width="201dp"
         android:layout_height="51dp"
         android:gravity="center"

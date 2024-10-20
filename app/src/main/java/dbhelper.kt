@@ -64,7 +64,7 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         var user_id = ""
         if (cursor != null) {
             if (cursor.moveToFirst()){
-                 user_id = cursor?.getString(cursor.getColumnIndexOrThrow("user_id")).toString()
+                 user_id = cursor.getString(cursor.getColumnIndexOrThrow("user_id")).toString()
                 return user_id
             }else{
                 return ""
@@ -75,18 +75,19 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
 
     //inserting booking table venues
-    fun insertbook(v_name: String, date: String, startTime: String, endtime: String, charge: String, no_of_player: String): Long {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put("v_name", v_name)
+    fun insertbook(date: String, startTime: String, endTime: String, totalCharges: String, noOfPlayers: String, venueName: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
             put("date", date)
             put("start_time", startTime)
-            put("end_time", endtime)
-            put("charge", charge)
-            put("no_of_player", no_of_player)
+            put("end_time", endTime)
+            put("charges", totalCharges)
+            put("no_of_players", noOfPlayers)
+            put("venue_name", venueName)  // Make sure to insert the venue name
         }
-        return db.insert("book", null, values)
+        return db.insert("book", null, contentValues)
     }
+
 
 
 

@@ -19,20 +19,20 @@ class slott : AppCompatActivity() {
 
 
         image1.setOnClickListener {
-            val intent = Intent(this, formv1::class.java)
-            intent.putExtra("v_name", "Venue 1")  // Pass the venue name for Venue 1
+            val intent = Intent(this, form1::class.java)
+            intent.putExtra("v_name", "Cricket Haven")  // Pass the venue name for Venue 1
             startActivity(intent)
         }
 
         image2.setOnClickListener {
             val intent = Intent(this, formv2::class.java)
-            intent.putExtra("v_name", "Venue 2")  // Pass the venue name for Venue 2
+            intent.putExtra("v_name", "Box Arena 360")  // Pass the venue name for Venue 2
             startActivity(intent)
         }
 
         image3.setOnClickListener {
             val intent = Intent(this, formv3::class.java)
-            intent.putExtra("v_name", "Venue 3")  // Pass the venue name for Venue 3
+            intent.putExtra("v_name", "Cricket Dome")  // Pass the venue name for Venue 3
             startActivity(intent)
         }
     }
