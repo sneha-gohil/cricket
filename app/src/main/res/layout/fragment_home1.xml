@@ -33,6 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Book Now"
+                android:backgroundTint="#388881"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"/>
 
@@ -67,6 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="View Players"
+                android:backgroundTint="#388881"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"/>
 

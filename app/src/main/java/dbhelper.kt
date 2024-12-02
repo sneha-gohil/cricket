@@ -75,20 +75,18 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
 
     //inserting booking table venues
-    fun insertbook(date: String, startTime: String, endTime: String, totalCharges: String, noOfPlayers: String, venueName: String): Long {
+    fun insertbook(v_name: String, date: String, start_time: String, end_time: String, charge: String, no_of_player: String): Long {
         val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
+        val values = ContentValues().apply {
+            put("v_name", v_name)
             put("date", date)
-            put("start_time", startTime)
-            put("end_time", endTime)
-            put("charges", totalCharges)
-            put("no_of_players", noOfPlayers)
-            put("venue_name", venueName)  // Make sure to insert the venue name
+            put("start_time", start_time)
+            put("end_time", end_time)
+            put("charge", charge)
+            put("no_of_player", no_of_player)
         }
-        return db.insert("book", null, contentValues)
+        return db.insert("book", null, values)
     }
-
-
 
 
     //inserting player details
@@ -149,12 +147,12 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
 
-    fun insertPaymentDetails(userId: String, bookId: String, paymentMethod: String, date: String): Long {
+    fun insertPayment(user_id: String, book_id: String, pay_method: String, date: String): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues().apply {
-            put("user_id", userId)
-            put("book_id", bookId)
-            put("pay_method", paymentMethod)
+            put("user_id", user_id)
+            put("book_id", book_id)
+            put("pay_method", pay_method)
             put("date", date)
         }
         return db.insert("payment", null, contentValues)
@@ -206,7 +204,6 @@ class dbhelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                 charge REAL NOT NULL,
                 no_of_player INTEGER NOT NULL
             );
-
         """)
 
         //player table

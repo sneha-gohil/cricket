@@ -34,7 +34,8 @@ class admin : AppCompatActivity() {
             } else {
                 // Check if the entered credentials match the hardcoded admin credentials
                 if (username == adminUsername && password == adminPassword) {
-                    // Successful login, navigate to adminpage activity
+                    val intent=Intent(this,adhome::class.java)
+                    startActivity(intent)
                 } else {
                     // Invalid credentials
                     Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show()
